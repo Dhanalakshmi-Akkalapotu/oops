@@ -1,0 +1,182 @@
+iBHubs
+
+Home
+AssignmentID - OOP002
+Submission Guidelines
+Task1: Truck
+# Welcome to World of Cars Contd.
+In this assignment we will try to simulate different types of vehicles
+
+# Submission Guidelines
+Create a folder /home/ec2-user/environment/oop/oop_submissions/oop_assignment_002. Make use of the below example command
+$ mkdir -p /home/ec2-user/environment/oop/oop_submissions/oop_assignment_002
+You can make use of the Car class you have built
+Write all your code in truck.py file
+Using the below snippet download a program which should be used to submit code
+$ wget https://itp-tech-training.s3.ap-south-1.amazonaws.com/common_resources/submit_assignment
+$ chmod +x submit_assignment
+To submit your assignment execute the below code snippet in the assignment folder i.e /home/ec2-user/environment/oop/oop_submissions/oop_assignment_001 here
+cloud9$ ./submit_assignment
+On submission you will get results.txt in your assignment folder. results.txt gives you the test case results.
+#Task1: Truck
+Now we need a Truck in our cars world.
+A truck is a Car but with the following additional behaviours
+
+Truck horn sounds “Honk Honk”
+Truck can load some cargo within max_cargo_weight
+Truck can load & unload the cargo only when the truck is at rest
+load & unload method expect cargo_weight as argument which is a positive integer. Incase of invalid data raise the ValueError as shown in below code samples
+Coding Guidelines:
+
+In case of invalid data during the creation of car. Your code should raise ValueError as mentioned in the below code sample
+>>> truck = Truck(color="Red", max_speed=250, acceleration=10, tyre_friction=3, max_cargo_weight=100)  
+>>> truck.load(50)  
+>>> truck.load(100)  
+Cannot load cargo more than max limit: 100  
+>>> truck.load(-100) 
+ValueError: Invalid value for cargo_weight
+
+>>> truck = Truck(color="Red", max_speed=250, acceleration=10, tyre_friction=3, max_cargo_weight=100)  
+>>> truck.start_engine()  
+>>> truck.accelerate()  
+>>> truck.load(50) # Prints
+Cannot load cargo during motion 
+>>> truck.sound_horn() # Prints
+Honk Honk  
+
+>>> truck = Truck(color="Red", max_speed=250, acceleration=10, tyre_friction=3, max_cargo_weight=100)  
+>>> truck.start_engine() 
+>>> truck.load(50)
+>>> truck.accelerate()  
+>>> truck.unload(50) # Prints
+Cannot unload cargo during motion 
+>>> truck.sound_horn() # Prints
+Honk Honk  
+
+>>> truck = Truck(color="Red", max_speed=250, acceleration=10, tyre_friction=3, max_cargo_weight=100)  
+>>> truck.start_engine() 
+>>> truck.load(50)
+>>> truck.unload(80)
+>>> truck.load(100) # Prints
+Cannot load cargo more than max limit: 100  
+>>> truck.unload(50)
+>>> truck.load(100)
+
+Back
+
+
+
+class Car:
+    horn="Beep Beep"
+    def __init__(self,max_speed,acceleration,tyre_friction,color=0):
+        self._color=color
+        self._max_speed=max_speed
+        self._acceleration=acceleration
+        self._tyre_friction=tyre_friction
+        self._current_speed=0
+        self._is_engine_started=False
+        if self._acceleration<0:
+            raise ValueError('Invalid value for acceleration')
+        if self._max_speed<0:
+            raise ValueError('Invalid value for max_speed')
+        if self._tyre_friction<0:
+            raise ValueError('Invalid value for tyre_friction')    
+    def start_engine(self):
+            self._is_engine_started=True
+    @property  
+    def max_speed(self):
+        return self._max_speed
+    @property
+    def color(self):
+        return self._color
+    
+    @property  
+    def acceleration(self):
+        return self._acceleration
+    @property  
+    def tyre_friction(self):
+        return self._tyre_friction 
+    @property  
+    def current_speed(self):
+        return self._current_speed  
+    @property 
+    def is_engine_started(self):
+        return self._is_engine_started
+    def accelerate(self):
+        if self._is_engine_started==True:
+            if self._current_speed<self._max_speed:
+                self._current_speed+=self._acceleration
+            else:
+                self._current_speed=self._max_speed
+        else:
+            print('Start the engine to accelerate')
+  
+    def apply_brakes(self):
+        
+        self._current_speed-=self._tyre_friction
+        if self._current_speed<self._tyre_friction:
+            self._current_speed=0
+      
+    def sound_horn(self):
+        if self._is_engine_started==True:
+            print(self.horn) 
+        else:
+            print('Start the engine to sound_horn')
+  
+    def stop_engine(self):
+        self._is_engine_started=False         
+        
+        
+        
+        from car import Car
+class Truck(Car):
+    horn="Honk Honk"
+    def __init__(self,max_speed,acceleration,tyre_friction,max_cargo_weight,color=0):
+        super().__init__(max_speed,acceleration,tyre_friction,color)
+        self._max_cargo_weight=max_cargo_weight
+        self._current_load=0
+        if self._max_cargo_weight<0:
+            raise ValueError('Invalid value for cargo_weight')  
+            
+    
+    @property  
+    def max_cargo_weight(self):
+        return self._max_cargo_weight
+        
+    @property  
+    def current_load(self):
+        return self._current_load      
+        
+      
+            
+    def load(self,total_load):
+        if total_load<0:
+            raise ValueError('Invalid value for cargo_weight')  
+            
+        #else:    
+        if self._current_speed>0:
+            print("Cannot load cargo during motion")
+        else:
+            if (self._current_load+total_load)<=self._max_cargo_weight:
+                self._current_load+=total_load
+            else:
+                print("Cannot load cargo more than max limit: {}".format(self._max_cargo_weight))
+              
+    def unload(self,total_load):
+        if total_load<0:
+            raise ValueError('Invalid value for cargo_weight')  
+        #else:
+        if self._current_speed>0:
+            print("Cannot unload cargo during motion")
+        else:
+                
+            if total_load>=self._current_load:
+                self._current_load=0
+            else:
+                self._current_load-=total_load
+           
+                                                                                                                                                                                                                                
+
+
+
+
